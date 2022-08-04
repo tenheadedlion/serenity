@@ -78,6 +78,8 @@ default-features = false
 features = ["json", "multipart", "stream"]
 optional = true
 version = "0.11.7"
+git = "https://github.com/kvinwang/reqwest.git"
+branch = "sidevm"
 
 [dependencies.serenity-voice-model]
 path = "./voice-model"
@@ -90,9 +92,13 @@ version = "1.1"
 
 [dependencies.async-tungstenite]
 default-features = false
-features = ["tokio-runtime"]
+features = []
 optional = true
 version = "0.17"
+
+[dependencies.pink-sidevm]
+optional = true
+version = "0.1"
 
 [dependencies.typemap_rev]
 optional = true
@@ -197,7 +203,8 @@ temp_cache = ["cache", "moka"]
 # - Rustls Backends
 rustls_backend = [
     "reqwest/rustls-tls",
-    "async-tungstenite/tokio-rustls-webpki-roots",
+    "async-tungstenite",
+    "pink-sidevm",
     "tokio",
     "bytes",
 ]
@@ -205,7 +212,8 @@ rustls_backend = [
 # - Native TLS Backends
 native_tls_backend = [
     "reqwest/native-tls",
-    "async-tungstenite/tokio-native-tls",
+    "async-tungstenite",
+    "pink-sidevm",
     "tokio",
     "bytes",
 ]

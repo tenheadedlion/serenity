@@ -1,10 +1,12 @@
 use std::io::Read;
 
 use async_trait::async_trait;
+use async_tungstenite::tungstenite::handshake::client::Request;
 use async_tungstenite::tungstenite::Message;
 use flate2::read::ZlibDecoder;
 use futures::{SinkExt, StreamExt};
-use tokio::time::timeout;
+use pink_sidevm::net::TcpStream;
+use pink_sidevm::time::timeout;
 use tracing::{instrument, warn};
 use url::Url;
 
@@ -25,7 +27,7 @@ pub trait SenderExt {
 #[async_trait]
 impl ReceiverExt for WsStream {
     async fn recv_json(&mut self) -> Result<Option<Value>> {
-        const TIMEOUT: tokio::time::Duration = tokio::time::Duration::from_millis(500);
+        const TIMEOUT: std::time::Duration = std::time::Duration::from_millis(500);
 
         let ws_message = match timeout(TIMEOUT, self.next()).await {
             Ok(Some(Ok(v))) => Some(v),
@@ -79,14 +81,27 @@ pub(crate) fn convert_ws_message(message: Option<Message>) -> Result<Option<Valu
 
 #[instrument]
 pub(crate) async fn create_client(url: Url) -> Result<WsStream> {
+    use async_tungstenite::tungstenite::client::IntoClientRequest;
+
+    let request: Request = url.clone().into_client_request()?;
+    let enable_tls = url.scheme() == "wss";
+    let domain = url.host_str().ok_or(Error::Other("Invalid Url"))?;
+    let port = url.port().unwrap_or(if enable_tls { 443 } else { 80 });
+
+    // Make sure we check domain and mode first. URL must be valid.
+    let tcp = TcpStream::connect(domain, port, enable_tls)
+        .await
+        .or(Err(Error::Other("Make connection failed")))?;
+
     let config = async_tungstenite::tungstenite::protocol::WebSocketConfig {
         max_message_size: None,
         max_frame_size: None,
         max_send_queue: None,
         accept_unmasked_frames: false,
     };
+
     let (stream, _) =
-        async_tungstenite::tokio::connect_async_with_config(url, Some(config)).await?;
+        async_tungstenite::client_async_with_config(request, tcp, Some(config)).await?;
 
     Ok(stream)
 }

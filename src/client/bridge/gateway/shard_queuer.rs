@@ -4,7 +4,9 @@ use std::sync::Arc;
 use futures::channel::mpsc::{UnboundedReceiver as Receiver, UnboundedSender as Sender};
 use futures::StreamExt;
 use tokio::sync::{Mutex, RwLock};
-use tokio::time::{sleep, timeout, Duration, Instant};
+use pink_sidevm::time::{sleep, timeout};
+use std::time::{Duration, Instant};
+
 use tracing::{debug, info, instrument, warn};
 use typemap_rev::TypeMap;
 

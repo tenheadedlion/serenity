@@ -4,7 +4,7 @@ use std::sync::Arc;
 use futures::channel::mpsc::{self, UnboundedReceiver as Receiver, UnboundedSender as Sender};
 use futures::StreamExt;
 use tokio::sync::{Mutex, RwLock};
-use tokio::time::timeout;
+use pink_sidevm::time::timeout;
 use tracing::{info, instrument, warn};
 use typemap_rev::TypeMap;
 
@@ -270,7 +270,7 @@ impl ShardManager {
     /// stopped.
     #[instrument(skip(self))]
     pub async fn shutdown(&mut self, shard_id: ShardId, code: u16) {
-        const TIMEOUT: tokio::time::Duration = tokio::time::Duration::from_secs(5);
+        const TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
 
         info!("Shutting down shard {}", shard_id);
 

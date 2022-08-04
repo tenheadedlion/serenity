@@ -21,7 +21,7 @@ pub use structures::buckets::BucketBuilder;
 use structures::buckets::{Bucket, RateLimitAction};
 pub use structures::*;
 use tokio::sync::Mutex;
-use tokio::time::sleep;
+use pink_sidevm::time::sleep;
 use tracing::instrument;
 use uwl::Stream;
 
