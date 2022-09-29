@@ -12,7 +12,7 @@ use tokio::sync::mpsc::{
     UnboundedReceiver as Receiver,
     UnboundedSender as Sender,
 };
-use pink_sidevm::time::{sleep, Sleep};
+use sidevm::time::{sleep, Sleep};
 
 use crate::client::bridge::gateway::ShardMessenger;
 use crate::collector::LazyArc;

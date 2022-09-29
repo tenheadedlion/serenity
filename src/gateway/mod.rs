@@ -64,7 +64,7 @@ use crate::model::user::OnlineStatus;
 pub type CurrentPresence = (Option<Activity>, OnlineStatus);
 
 use async_tungstenite::WebSocketStream;
-use pink_sidevm as sidevm;
+use sidevm as sidevm;
 use sidevm::net::TcpStream;
 
 pub type WsStream = WebSocketStream<TcpStream>;

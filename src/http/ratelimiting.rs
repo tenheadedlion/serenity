@@ -48,7 +48,7 @@ use std::time::SystemTime;
 use reqwest::header::HeaderMap;
 use reqwest::{Client, Response, StatusCode};
 use tokio::sync::{Mutex, RwLock};
-use pink_sidevm::time::sleep;
+use sidevm::time::sleep;
 use std::time::Duration;
 use tracing::{debug, instrument};
 

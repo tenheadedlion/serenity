@@ -4,7 +4,7 @@ use std::sync::Arc;
 use futures::channel::mpsc::{self, UnboundedReceiver as Receiver, UnboundedSender as Sender};
 use futures::StreamExt;
 use tokio::sync::{Mutex, RwLock};
-use pink_sidevm::time::timeout;
+use sidevm::time::timeout;
 use tracing::{info, instrument, warn};
 use typemap_rev::TypeMap;
 

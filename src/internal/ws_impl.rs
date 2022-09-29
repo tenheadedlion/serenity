@@ -5,8 +5,8 @@ use async_tungstenite::tungstenite::handshake::client::Request;
 use async_tungstenite::tungstenite::Message;
 use flate2::read::ZlibDecoder;
 use futures::{SinkExt, StreamExt};
-use pink_sidevm::net::TcpStream;
-use pink_sidevm::time::timeout;
+use sidevm::net::TcpStream;
+use sidevm::time::timeout;
 use tracing::{instrument, warn};
 use url::Url;
 

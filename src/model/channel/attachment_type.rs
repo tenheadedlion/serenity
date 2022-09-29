@@ -5,8 +5,8 @@ use std::path::{Path, PathBuf};
 
 #[cfg(feature = "http")]
 use reqwest::Client;
-#[cfg(feature = "http")]
-use tokio::{fs::File, io::AsyncReadExt};
+//#[cfg(feature = "http")]
+//use tokio::{fs::File, io::AsyncReadExt};
 use url::Url;
 
 #[cfg(feature = "http")]
@@ -21,7 +21,7 @@ pub enum AttachmentType<'a> {
     /// Indicates that the [`AttachmentType`] is a byte slice with a filename.
     Bytes { data: Cow<'a, [u8]>, filename: String },
     /// Indicates that the [`AttachmentType`] is a [`File`]
-    File { file: &'a File, filename: String },
+    /// File { file: &'a File, filename: String },
     /// Indicates that the [`AttachmentType`] is a [`Path`]
     Path(&'a Path),
     /// Indicates that the [`AttachmentType`] is an image URL.
@@ -35,17 +35,17 @@ impl<'a> AttachmentType<'a> {
             Self::Bytes {
                 data, ..
             } => data.clone().into_owned(),
-            Self::File {
-                file, ..
-            } => {
-                let mut buf = Vec::new();
-                file.try_clone().await?.read_to_end(&mut buf).await?;
-                buf
-            },
-            Self::Path(path) => {
-                let mut file = File::open(path).await?;
-                let mut buf = Vec::new();
-                file.read_to_end(&mut buf).await?;
+            // Self::File {
+            //     file, ..
+            // } => {
+            //     let mut buf = Vec::new();
+            //     file.try_clone().await?.read_to_end(&mut buf).await?;
+            //     buf
+            // },
+            Self::Path(_path) => {
+                //let mut file = File::open(path).await?;
+                let buf = Vec::new();
+                //file.read_to_end(&mut buf).await?;
                 buf
             },
             Self::Image(url) => {
@@ -61,9 +61,10 @@ impl<'a> AttachmentType<'a> {
             Self::Bytes {
                 filename, ..
             }
-            | Self::File {
-                filename, ..
-            } => Ok(Some(filename.to_string())),
+            //| Self::File {
+            //    filename, ..
+            //}
+             => Ok(Some(filename.to_string())),
             Self::Path(path) => {
                 Ok(path.file_name().map(|filename| filename.to_string_lossy().to_string()))
             },
@@ -107,14 +108,14 @@ impl<'a> From<&'a PathBuf> for AttachmentType<'a> {
     }
 }
 
-impl<'a> From<(&'a File, &str)> for AttachmentType<'a> {
-    fn from(f: (&'a File, &str)) -> AttachmentType<'a> {
-        AttachmentType::File {
-            file: f.0,
-            filename: f.1.to_string(),
-        }
-    }
-}
+//impl<'a> From<(&'a File, &str)> for AttachmentType<'a> {
+//    fn from(f: (&'a File, &str)) -> AttachmentType<'a> {
+//        AttachmentType::File {
+//            file: f.0,
+//            filename: f.1.to_string(),
+//        }
+//    }
+//}
 
 #[cfg(test)]
 mod test {
